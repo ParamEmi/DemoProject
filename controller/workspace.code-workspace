@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "../../node-react-crud"
+	},
+	{
+		"path": ".."
+	},
+	{
+		"path": "../../Node"
+	}
+],
+  "settings": {}
+}
