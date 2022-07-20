@@ -17,14 +17,14 @@ const registerStudent = async (req, res) => {
     });
   }
 };
-const getProducts = async (req, res) => {
+const getUesr = async (req, res) => {
   try {
-    const getData = await Event.find().populate("userId");
+    const getData = await User.find();
 
     // console.log(getData, "??????????????????");
     return res.status(200).send({
       status: 200,
-      message: "Get Products",
+      message: "users details get succesfully",
       data: getData,
     });
   } catch (err) {
@@ -38,5 +38,5 @@ const getProducts = async (req, res) => {
 
 module.exports = {
   registerStudent,
-  getProducts,
+  getUesr,
 };
