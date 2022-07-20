@@ -13,8 +13,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Routes
-
-app.listen(process.env.PORT, () => {
+var port = process.env.PORT || 3000;
+app.listen(port, () => {
   console.log("app is listening on port " + process.env.PORT);
 });
 
