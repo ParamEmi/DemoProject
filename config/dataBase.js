@@ -1,8 +1,9 @@
 const { mongoose }  = require("mongoose");
-const db = 'mongodb+srv://param:aQawvPWLUlgtSKoe@cluster0.gffac.mongodb.net/appDB?retryWrites=true&w=majority';
+const CONFIG =  require("../config.json")
+
 //mongoose.connect("mongodb://localhost:27017/userApp")
 mongoose.Promise = global.Promise;
-mongoose.connect(db, {
+mongoose.connect(CONFIG.DB_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });

@@ -1,5 +1,6 @@
 const express = require("express");
 var bodyParser = require("body-parser");
+const CONFIG =  require("./config.json")
 const app = express();
 var cors = require("cors");
 
@@ -22,7 +23,4 @@ app.use("/test",  (req,res)=>{
   res.send("testing message 2")
 });
 app.use("/user", require("./routes.js/userRoutes"));
-app.use("/event", require("./routes.js/eventRoutes"));
-app.use("/project", require("./routes.js/Project"));
-app.use("/student", require("./routes.js/Student"));
 module.exports = app;

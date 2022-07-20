@@ -1,6 +1,4 @@
 const User = require("../models/UserModel");
-const Event = require("../models/EventModel");
-
 // import Nodemailer from "../helper/index.js";
 const registerStudent = async (req, res) => {
   try {
