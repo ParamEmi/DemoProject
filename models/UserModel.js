@@ -3,15 +3,14 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
-    name: String,
-    description: String,
-    category: String,
-    email: String,
-    quantity: Number,
-    price: Number,
-    images: String,
+    name: {type:String, required:true},
+    email: {type:String , required:true},
+    password: {type:String,required:true},
+    address: {type:String , required:true},
+    PhoenNumber:{type:String, required:true},
+    role:{type:String , enun:["user","admin"], default:"user"}
   },
-  { collection: "users" }
+  { collection: "users" , timestamps: { createdAt: true, updatedAt: true }  }
 );
 
 var User = mongoose.model("User", UserSchema);

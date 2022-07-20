@@ -1,5 +1,5 @@
 {
-    "DB_URL": "mongodb+srv://param:aQawvPWLUlgtSKoe@cluster0.gffac.mongodb.net/appDB?retryWrites=true&w=majority",
+    "DB_URL": "mongodb+srv://param:aQawvPWLUlgtSKoe@cluster0.gffac.mongodb.net/demoProject?retryWrites=true&w=majority",
     "PORT": 3000
   }
   
