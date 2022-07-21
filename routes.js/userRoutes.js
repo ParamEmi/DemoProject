@@ -19,5 +19,6 @@ check('password').isLength({ min: 8 })
 
 
 router.get("/alldata", userController.getUesr);
+router.post("/login" , userController.login);
 
 module.exports = router;
