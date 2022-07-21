@@ -7,7 +7,7 @@ const CONFIG =  require("../config.json")
 
 const registerStudent = async (req, res) => {
   try {
-    const {name,email, password,address,PhoenNumber} = req.body;
+    const {name,email, password,address,phoneNo} = req.body;
 
     const user = await User.findOne({email});
 
@@ -78,12 +78,24 @@ const login =  async (req,res)=>{
         const validUser =  await bcrypt.compare(password,user.password);
         if(validUser)
         {
+        
+          let payload = {
+            user,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 60 * 24,
+          }
 
+          let token = jwt.sign(payload,CONFIG.JWT_SECRET);
+          if (!token) {
+            return res.status(206).json({
+              message: "Error in generating token",
+            });
+          }
 
           return res.status(200).send({
             status:200,
             message:"login Successfully",
-            data:user
+            data:user,
+            token:token
           })
         }
         else{
