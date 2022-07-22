@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controller/UserControl");
 const { check, validationResult } = require('express-validator');
-const validator  = require("../helper/users")
+const { validator,generateToken,authmiddleware}  = require("../helper/users")
 
 router.post("/register", 
 check("email")
@@ -14,11 +14,12 @@ check('password').isLength({ min: 8 })
   )
 .withMessage({message:"Please enter a password at least 8 character and contain At least one uppercase.At least one lower case.At least one special character. "})
 ,validator,
-  userController.registerStudent
+authmiddleware,userController.registerStudent
 );
 
-
-router.get("/alldata", userController.getUesr);
+router.get("/alldata",authmiddleware, userController.getUesr);
 router.post("/login" , userController.login);
+router.get("/deleteUser/:id" , authmiddleware,userController.deleteUser);
+router.get("/getSingleUser/:id" , authmiddleware,userController.getSingleUser)
 
 module.exports = router;
