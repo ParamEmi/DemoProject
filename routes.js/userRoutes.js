@@ -20,6 +20,9 @@ authmiddleware,userController.registerStudent
 router.get("/alldata",authmiddleware, userController.getUesr);
 router.post("/login" , userController.login);
 router.get("/deleteUser/:id" , authmiddleware,userController.deleteUser);
-router.get("/getSingleUser/:id" , authmiddleware,userController.getSingleUser)
+router.get("/getSingleUser/:id" , authmiddleware,userController.getSingleUser);
+router.put("/updateUser/:id" ,authmiddleware, userController.updateUser);
+router.get("/getUserBySearch/:text" ,authmiddleware, userController.getUserBySearch);
+router.get("/getUserWithpagination/:pageNo/:limit" ,authmiddleware, userController.getUserWithpagination);
 
 module.exports = router;

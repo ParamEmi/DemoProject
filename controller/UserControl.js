@@ -206,10 +206,111 @@ const getSingleUser =  async (req,res,next)=>{
  }
 }
 
+const updateUser = async (req,res,next)=>{
+  try {
+    const id =  req.params.id;
+    const updateUser = {
+      ...req.body,
+    }
+
+    let result =  await User.updateOne(  {
+      _id: id,
+    },
+    { $set: { ...updateUser } },
+    );
+    if(result)
+    {
+      return res.status(200).send({
+        status: 200,
+        message: "user update succesfully",
+        success: true,
+      });
+    }
+    
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+}
+
+const getUserBySearch =  async (req,res,next)=>
+{
+  try {
+      const text =  req.params.text;
+
+      const data = await User.find({
+        $and:[
+          {
+            $or: [
+              {name: {$regex: String(text), $options: "i" }},
+              {address: {$regex: String(text), $options: "i" }},
+            ]
+          },
+          // {role:"admin"}
+        ]
+       
+      });
+      if(data)
+      {
+        return res.status(200).send({
+          status:200,
+          message:"User search details",
+          data:data,
+          success:true
+        })
+      }
+      else{
+        return res.status(200).send({
+          status:200,
+          message:"User not found ",
+          data:{},
+          success:false
+        })
+      }
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+}
+
+const getUserWithpagination = async (req,res,next)=>{
+  try {
+      const {pageNo , limit} =  req.params;
+      
+      let data  =  await User.find().skip(parseInt(pageNo-1)*limit).limit(limit)
+      if(data)
+      {
+        return res.status(200).send({
+          status:200,
+          message:"user details get succesfully",
+          data:data,
+          success:true
+        })
+      }
+    
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+}
+
 module.exports = {
   registerStudent,
   getUesr,
   login,
   deleteUser,
-  getSingleUser
+  getSingleUser,
+  updateUser,
+  getUserBySearch,
+  getUserWithpagination
 };
