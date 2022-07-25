@@ -24,5 +24,8 @@ router.get("/getSingleUser/:id" , authmiddleware,userController.getSingleUser);
 router.put("/updateUser/:id" ,authmiddleware, userController.updateUser);
 router.get("/getUserBySearch/:text" ,authmiddleware, userController.getUserBySearch);
 router.get("/getUserWithpagination/:pageNo/:limit" ,authmiddleware, userController.getUserWithpagination);
+router.put("/changePassword",authmiddleware, userController.changePassword)
+router.post("/forgot",userController.forgotPassword)
+router.post("/reset",userController.resetPassword)
 
 module.exports = router;

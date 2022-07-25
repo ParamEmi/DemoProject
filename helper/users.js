@@ -38,6 +38,16 @@ const validator = (req, res, next) => {
     }
   };
 
+  const verifyToken =  (token)=>{
+    try {
+      const decoded = jwt.verify(token, CONFIG.JWT_SECRET);
+      return decoded
+    } catch (error) {
+      return false
+    }
+  }
+   
+
   const authmiddleware = (req,res,next)=>{
 
     if (
@@ -53,9 +63,7 @@ const validator = (req, res, next) => {
     try{
       const accessToken = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(accessToken, CONFIG.JWT_SECRET);
-      console.log(decoded, "decoded");
       let userId = decoded.data._id;
-      console.log(userId, "userId");
       req._user = userId;
       return next();
       }catch(e){
@@ -63,7 +71,7 @@ const validator = (req, res, next) => {
       }
   }
   
-  const sendRegisterEmail =  (user)=>{
+  const sendEmail =  (mailDetails)=>{
     let mailTransporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -74,13 +82,7 @@ const validator = (req, res, next) => {
   console.log("user"+CONFIG.email_username);
   console.log("user"+CONFIG.email_password);
    
-  let mailDetails = {
-      from: 'paramjeet.eminence@gmail.com',
-      to: user.email,
-      subject: 'Registeration',
-      text: user.name + ' your registeration has been successfully'
-  };
-   
+  
   mailTransporter.sendMail(mailDetails, function(err, data) {
       if(err) {
           console.log('Error Occurs'+err);
@@ -94,5 +96,6 @@ const validator = (req, res, next) => {
     validator,
     generateToken,
     authmiddleware,
-    sendRegisterEmail
+    verifyToken,
+    sendEmail
   };

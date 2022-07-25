@@ -2,7 +2,7 @@ const User = require("../models/UserModel");
 const bcrypt =  require("bcrypt");
 var jwt = require('jsonwebtoken');
 const CONFIG =  require("../config.json")
-const { validator,generateToken,sendRegisterEmail} = require("../helper/users")
+const { validator,generateToken,sendEmail,verifyToken} = require("../helper/users")
 // import Nodemailer from "../helper/index.js";
 
 
@@ -28,7 +28,14 @@ const registerStudent = async (req, res) => {
     };
   
     const result = await User.create(newUser);
-    sendRegisterEmail(req.body);
+    const mailDetails = {
+        from: CONFIG.email_username,
+        to: result.email,
+        subject: 'Registeration',
+        text: result.name + ' your registeration has been successfully'
+      };
+  
+       sendEmail(mailDetails);
 
     return res.status(200).send({
       status: 200,
@@ -306,6 +313,130 @@ const getUserWithpagination = async (req,res,next)=>{
   }
 }
 
+const changePassword = async (req,res,next)=>{
+  try {
+    const {oldPassword ,newPassword} =  req.body;
+    const _id  = req._user;
+
+    console.log(_id);
+
+    const user =  await User.findById({_id});
+  
+    const  validUser = await bcrypt.compare(oldPassword,user.password);
+    if(validUser)
+    {
+      let hashPassword =  await bcrypt.hash(newPassword.toString(),10);
+
+      let updatePassword =  await User.updateOne({_id},{password:hashPassword});
+      if(updatePassword)
+      {
+        return res.status(200).send({
+          status:200,
+          message:"Password change successfully",
+          success:true
+        })
+      }
+    }
+    else{
+      return res.status(400).send({
+        status:400,
+        message:"Old password is incorrect",
+        success:false,
+      })
+    }
+    
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+}
+
+const forgotPassword =  async (req,res,next)=>{
+  try {
+    const {email} =  req.body;
+
+    let checkUser = await User.findOne({email});
+    if(checkUser)
+    {
+       let token =  generateToken(checkUser);
+       const mailDetails = {
+        from: CONFIG.email_username,
+        to: email,
+        subject: 'Forgot Password Link',
+        html: `<a href="${CONFIG.baseURL}/reset/${token}">click here to reset you password</a>`
+      };
+      sendEmail(mailDetails);
+      return res.status(200).send({
+        status:200,
+        message:"Forgot password email send successfully",
+        success:true
+      })
+       
+    }
+    else{
+      return  res.status(400).send({
+        status:400,
+        message : "User not exists",
+        success:false
+      })
+    }
+    
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+
+}
+
+
+const resetPassword =  async (req,res,next)=>{
+  try {
+    const {password , token} =  req.body;
+    let decoded = verifyToken(token);
+    if(decoded)
+    {
+      let _id =  decoded.data._id;
+      let hashPassword =  await bcrypt.hash(password.toString(),10);
+      let updatePassword =  await User.updateOne({_id},{password:hashPassword});
+      if(hashPassword){
+        return res.status(200).send({
+          status:200,
+          message:"Password reset successfully",
+          success:true,
+        })
+      }
+      else{
+        return  res.status(400).send({
+          status:400,
+          message:"Something went wrong to reset password",
+          success:false,
+        })
+      }
+    }
+    else{
+      return res.status(400).send({
+        status:400,
+        message:"Token expired",
+        success:false
+      })
+    }
+
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+}
+
 module.exports = {
   registerStudent,
   getUesr,
@@ -314,5 +445,8 @@ module.exports = {
   getSingleUser,
   updateUser,
   getUserBySearch,
-  getUserWithpagination
+  getUserWithpagination,
+  changePassword,
+  forgotPassword,
+  resetPassword
 };
