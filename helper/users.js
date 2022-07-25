@@ -1,6 +1,7 @@
 const {validationResult } = require('express-validator');
 var jwt = require('jsonwebtoken');
-const CONFIG =  require("../config.json")
+const CONFIG =  require("../config.json");
+const nodemailer = require('nodemailer');
 
 const validator = (req, res, next) => {
     const errors = validationResult(req);
@@ -62,8 +63,36 @@ const validator = (req, res, next) => {
       }
   }
   
+  const sendRegisterEmail =  (user)=>{
+    let mailTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: CONFIG.email_username,
+          pass: 'nhrszaijtuvaeaek'
+      }
+  });
+  console.log("user"+CONFIG.email_username);
+  console.log("user"+CONFIG.email_password);
+   
+  let mailDetails = {
+      from: 'paramjeet.eminence@gmail.com',
+      to: user.email,
+      subject: 'Registeration',
+      text: user.name + ' your registeration has been successfully'
+  };
+   
+  mailTransporter.sendMail(mailDetails, function(err, data) {
+      if(err) {
+          console.log('Error Occurs'+err);
+      } else {
+          console.log('Email sent successfully');
+      }
+  });
+  }
+
   module.exports = {
     validator,
     generateToken,
-    authmiddleware
+    authmiddleware,
+    sendRegisterEmail
   };

@@ -2,7 +2,7 @@ const User = require("../models/UserModel");
 const bcrypt =  require("bcrypt");
 var jwt = require('jsonwebtoken');
 const CONFIG =  require("../config.json")
-const { validator,generateToken} = require("../helper/users")
+const { validator,generateToken,sendRegisterEmail} = require("../helper/users")
 // import Nodemailer from "../helper/index.js";
 
 
@@ -25,8 +25,10 @@ const registerStudent = async (req, res) => {
     const newUser = {
       ...req.body,
       password:hashPassword
-    }
+    };
+  
     const result = await User.create(newUser);
+    sendRegisterEmail(req.body);
 
     return res.status(200).send({
       status: 200,
