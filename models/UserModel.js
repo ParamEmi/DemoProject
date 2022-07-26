@@ -8,7 +8,8 @@ const UserSchema = new Schema(
     password: {type:String,required:true},
     address: {type:String , required:true},
     phoneNo:{type:String, required:true},
-    role:{type:String , enun:["user","admin"], default:"user"}
+    role:{type:String , enun:["user","admin"], default:"user"},
+    profilePic: {type:String}
   },
   { collection: "users" , timestamps: { createdAt: true, updatedAt: true }  }
 );

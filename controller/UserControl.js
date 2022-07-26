@@ -327,7 +327,7 @@ const changePassword = async (req,res,next)=>{
     {
       let hashPassword =  await bcrypt.hash(newPassword.toString(),10);
 
-      let updatePassword =  await User.updateOne({_id},{password:hashPassword});
+      let updatePassword =  await User.findByIdAndUpdate({_id},{password:hashPassword});
       if(updatePassword)
       {
         return res.status(200).send({
@@ -437,6 +437,46 @@ const resetPassword =  async (req,res,next)=>{
   }
 }
 
+const profilePic =  async (req,res)=>{
+  try {
+    const filename = req.file.filename;
+    const _id = req.body.user_id;
+    let checkUser =  await User.findOne({_id});
+    if(checkUser)
+    {
+      let updatePic  =  await User.updateOne({_id},{profilePic:filename});
+      if(updatePic)
+      {
+        return res.status(200).send({
+          status:200,
+          success:true,
+          filePath:req.file.path,
+          message:"Profile pic update successfully"
+        })
+      }
+      else{
+        return res.status(500).send({
+          status:500,
+          success:true,
+          message:"Something went wrong to update profile pic"
+        })
+      }
+    }else{
+      return res.status(400).send({
+        status:400,
+        message:"User not exists",
+        success:false,
+      })
+    }
+  } catch (err) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+};
+
 module.exports = {
   registerStudent,
   getUesr,
@@ -448,5 +488,6 @@ module.exports = {
   getUserWithpagination,
   changePassword,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  profilePic
 };

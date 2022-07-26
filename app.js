@@ -19,6 +19,9 @@ app.listen(port, () => {
   console.log("app is listening on port " + process.env.PORT);
 });
 
+app.use(express.static(__dirname + '/public'));
+app.use('/uploads', express.static('uploads'));
+
 app.use("/test",  (req,res)=>{
   res.send("testing message 2")
 });
