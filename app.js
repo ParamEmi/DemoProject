@@ -26,6 +26,7 @@ app.use("/test",  (req,res)=>{
   res.send("testing message 2")
 });
 app.use("/user", require("./routes.js/userRoutes"));
+app.use("/country", require("./routes.js/countryRoutes"));
 
 app.use((err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
