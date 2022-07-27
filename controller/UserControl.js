@@ -56,7 +56,7 @@ const registerStudent = async (req, res) => {
 
 const getUesr = async (req, res) => {
   try {
-    const getData = await User.find();
+    const getData = await User.find({role: {$ne: 'admin'}});
 
     // console.log(getData, "??????????????????");
     return res.status(200).send({
