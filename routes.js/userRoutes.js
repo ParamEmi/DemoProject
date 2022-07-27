@@ -42,7 +42,10 @@ router.get("/alldata",authmiddleware, userController.getUesr);
 router.post("/login" , userController.login);
 router.get("/deleteUser/:id" , authmiddleware,userController.deleteUser);
 router.get("/getSingleUser/:id" , authmiddleware,userController.getSingleUser);
-router.put("/updateUser/:id" ,authmiddleware, userController.updateUser);
+router.put("/updateUser/:id" ,check("email")
+.isEmail()
+.withMessage({message:"Please enter correct email"})
+,validator, authmiddleware,userController.updateUser);
 router.get("/getUserBySearch/:text" ,authmiddleware, userController.getUserBySearch);
 router.get("/getUserWithpagination/:pageNo/:limit" ,authmiddleware, userController.getUserWithpagination);
 router.put("/changePassword",authmiddleware, userController.changePassword)
