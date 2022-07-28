@@ -48,7 +48,12 @@ router.put("/updateUser/:id" ,check("email")
 ,validator, authmiddleware,userController.updateUser);
 router.get("/getUserBySearch/:text" ,authmiddleware, userController.getUserBySearch);
 router.get("/getUserWithpagination/:pageNo/:limit" ,authmiddleware, userController.getUserWithpagination);
-router.put("/changePassword",authmiddleware, userController.changePassword)
+router.put("/changePassword",check('newPassword').isLength({ min: 8 })
+.matches(
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/,
+  )
+.withMessage({message:"Please enter a new password at least 8 character and contain At least one uppercase.At least one lower case.At least one special character. "})
+,validator,authmiddleware, userController.changePassword)
 router.post("/forgot",userController.forgotPassword)
 router.post("/reset",userController.resetPassword);
 router.post("/profile" ,upload.single('image'), userController.profilePic);

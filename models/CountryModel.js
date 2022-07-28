@@ -3,15 +3,15 @@ const Schema = mongoose.Schema;
 
 const CountrySchema = new Schema(
   {
-    country_name : {type:String},
+    country_name : {type:String , unique : true,required: [true, "Country name is required"] },
     abbreviation : {type:String},
     stateList:[
         {
-            state_name:{type:String},
+            state_name:{type:String ,unique : true,required: [true, "State name is required"] },
             abbreviation:{type:String},
             cityList:[
                 {
-                    city_name:{type:String},
+                    city_name:{type:String ,unique : true, required: [true, "City name  is required"] },
                     abbreviation:{type:String}
                 },
             ]

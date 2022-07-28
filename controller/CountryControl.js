@@ -8,7 +8,10 @@ const add =  async (req,res)=>{
     try {
         
         const payload =  req.body;
-        console.log(payload);
+        let check = Country.find(
+            { stateList: { $elemMatch: { state_name:payload.state_name } } }
+         );
+
         let data  =  await Country.create(payload);
         if(data)
         {
@@ -16,7 +19,6 @@ const add =  async (req,res)=>{
                 status:200,
                 message:"Country added succesfully",
                 data:data
-
             })
         }
 
@@ -33,7 +35,12 @@ const get =  async (req,res)=>{
 
     try {
 
-        let data = await Country.find();
+        // let data = await Country.findOne({stateList: {$elemMatch: {state_name:"aabc",cityList:{$elemMatch:{city_name:"def"}}}}},{ "stateList.$": 1,"country_name":1,});
+       // let data  = await Country.find({},{"stateList":1});
+
+       // delete object from array 
+       
+       let data =  await Country.find();
         return res.status(200).send({
             status:200,
             message:"Country get succesfully",
@@ -41,7 +48,7 @@ const get =  async (req,res)=>{
             success:true
         })
         
-    } catch (error) {
+    } catch (err) {
         return res.status(500).send({
         status: 500,
         error: err.message,
