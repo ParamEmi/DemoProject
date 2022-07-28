@@ -39,7 +39,7 @@ const get =  async (req,res)=>{
        // let data  = await Country.find({},{"stateList":1});
 
        // delete object from array 
-       
+      let result =  await Country.updateOne({_id: "62e131fe2a57f461d5ce68f2"}, {$pull: {stateList: {_id: "62e131fe2a57f461d5ce68f3"}}})
        let data =  await Country.find();
         return res.status(200).send({
             status:200,
@@ -57,8 +57,29 @@ const get =  async (req,res)=>{
     }
 }
 
+const deleteLocation =  async (req,res)=>{
+    try {
+
+        let result =  await Country.updateOne({_id: "62e131fe2a57f461d5ce68f2"}, {$pull: {stateList: {_id: "62e131fe2a57f461d5ce68f3"}}})
+         return res.status(200).send({
+             status:200,
+             message:"Country get succesfully",
+             data:result,
+             success:true
+         })
+        
+    } catch (err) {
+        return res.status(500).send({
+            status: 500,
+            error: err.message,
+            success: false,
+            }); 
+    }
+}
+
 
 module.exports = {
     add,
-    get
+    get,
+    deleteLocation
 };
