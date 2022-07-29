@@ -259,7 +259,7 @@ const getUserBySearch =  async (req,res,next)=>
               {address: {$regex: String(text), $options: "i" }},
             ]
           },
-          // {role:"admin"}
+           {role:"user"}
         ]
        
       });
@@ -408,12 +408,12 @@ const resetPassword =  async (req,res,next)=>{
         userId:_id
       };
 
-      let findToken = await Password.findOne(payload).populate("userId");
+      let findToken = await Password.findOne(payload);
       if(findToken)
       {
           return res.status(500).send({
             status:500,
-            message:"Token allow only one time to change password",
+            message:"Token expired allow only one time to change password",
             success:false
           })
       }
