@@ -1,4 +1,5 @@
 const User = require("../models/UserModel");
+const Password = require("../models/PasswordModel");
 const bcrypt =  require("bcrypt");
 var jwt = require('jsonwebtoken');
 const CONFIG =  require("../config.json")
@@ -402,27 +403,45 @@ const resetPassword =  async (req,res,next)=>{
     if(decoded)
     {
       let _id =  decoded.data._id;
-      let hashPassword =  await bcrypt.hash(password.toString(),10);
-      let updatePassword =  await User.updateOne({_id},{password:hashPassword});
-      if(hashPassword){
-        return res.status(200).send({
-          status:200,
-          message:"Password reset successfully",
-          success:true,
-        })
+      let payload = {
+        token:token,
+        userId:_id
+      };
+
+      let findToken = await Password.findOne(payload).populate("userId");
+      if(findToken)
+      {
+          return res.status(500).send({
+            status:500,
+            message:"Token allow only one time to change password",
+            success:false
+          })
       }
-      else{
-        return  res.status(400).send({
-          status:400,
-          message:"Something went wrong to reset password",
-          success:false,
-        })
+      else
+      {
+          let tokenInsert =  await Password.create(payload)
+          let hashPassword =  await bcrypt.hash(password.toString(),10);
+          let updatePassword =  await User.updateOne({_id},{password:hashPassword});
+          if(hashPassword){
+            return res.status(200).send({
+              status:200,
+              message:"Password reset successfully",
+              success:true,
+            })
+          }
+          else{
+            return  res.status(400).send({
+              status:400,
+              message:"Something went wrong to reset password",
+              success:false,
+            })
+          }
       }
     }
     else{
       return res.status(400).send({
         status:400,
-        message:"Token expired",
+        message:"Token expired or something wrong went in token",
         success:false
       })
     }

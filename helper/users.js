@@ -79,9 +79,6 @@ const validator = (req, res, next) => {
           pass: 'nhrszaijtuvaeaek'
       }
   });
-  console.log("user"+CONFIG.email_username);
-  console.log("user"+CONFIG.email_password);
-   
   
   mailTransporter.sendMail(mailDetails, function(err, data) {
       if(err) {
