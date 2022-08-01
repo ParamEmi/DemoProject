@@ -3,6 +3,7 @@
     "PORT": 3000,
     "JWT_SECRET":"123456789",
     "baseURL":"https://demoprojectapis.herokuapp.com",
+    "CLIENT_URL_FRONT":"https://anilnewproject.herokuapp.com",
     "email_username":"paramjeet.eminence@gmail.com",
     "email_password":"nhrszaijtuvaeaek"
   }

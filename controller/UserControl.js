@@ -368,11 +368,7 @@ const forgotPassword =  async (req,res,next)=>{
         from: CONFIG.email_username,
         to: email,
         subject: 'Forgot Password Link',
-        html: `<a href="${CONFIG.baseURL}/reset/${token}">click here to reset you password</a>`,
-        attachments: [{   // utf-8 string as an attachment
-            filename: 'text1.txt',
-            content: 'hello world!'
-        }]
+        html: `<a href="${CONFIG.CLIENT_URL_FRONT}/reset-password/${token}">click here to reset you password</a>`,
       }
       sendEmail(mailDetails);
       return res.status(200).send({
@@ -473,17 +469,17 @@ const profilePic =  async (req,res)=>{
       let updatePic  =  await User.updateOne({_id},{profilePic:filename});
       if(updatePic)
       {
-        const mailDetails = {
-          from: CONFIG.email_username,
-          to: "paramjeet.eminence@gmail.com",
-          subject: 'Image attachments',
-          html: `<h1>Image : <img src="${CONFIG.baseURL}/${filepath}"/></h1>`,
-          attachments: [{   // utf-8 string as an attachment
-              filename: filename,
-              path: req.file.path,
-          }]
-        }
-        sendEmail(mailDetails);
+        // const mailDetails = {
+        //   from: CONFIG.email_username,
+        //   to: "paramjeet.eminence@gmail.com",
+        //   subject: 'Image attachments',
+        //   html: `<h1>Image : <img src="${CONFIG.baseURL}/${filepath}"/></h1>`,
+        //   attachments: [{   // utf-8 string as an attachment
+        //       filename: filename,
+        //       path: req.file.path,
+        //   }]
+        // }
+        // sendEmail(mailDetails);
 
         return res.status(200).send({
           status:200,
