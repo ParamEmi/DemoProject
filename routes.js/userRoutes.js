@@ -56,6 +56,7 @@ router.put("/changePassword",check('newPassword').isLength({ min: 8 })
 ,validator,authmiddleware, userController.changePassword)
 router.post("/forgot",userController.forgotPassword)
 router.post("/reset",userController.resetPassword);
+router.get("/deletePic/:id",userController.deletePic)
 router.post("/profile" ,upload.single('image'), userController.profilePic);
 
 module.exports = router;

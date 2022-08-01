@@ -3,6 +3,7 @@ const Password = require("../models/PasswordModel");
 const bcrypt =  require("bcrypt");
 var jwt = require('jsonwebtoken');
 const CONFIG =  require("../config.json")
+const path = require("path");
 const { validator,generateToken,sendEmail,verifyToken} = require("../helper/users")
 // import Nodemailer from "../helper/index.js";
 
@@ -367,8 +368,12 @@ const forgotPassword =  async (req,res,next)=>{
         from: CONFIG.email_username,
         to: email,
         subject: 'Forgot Password Link',
-        html: `<a href="${CONFIG.baseURL}/reset/${token}">click here to reset you password</a>`
-      };
+        html: `<a href="${CONFIG.baseURL}/reset/${token}">click here to reset you password</a>`,
+        attachments: [{   // utf-8 string as an attachment
+            filename: 'text1.txt',
+            content: 'hello world!'
+        }]
+      }
       sendEmail(mailDetails);
       return res.status(200).send({
         status:200,
@@ -458,7 +463,9 @@ const resetPassword =  async (req,res,next)=>{
 
 const profilePic =  async (req,res)=>{
   try {
+
     const filename = req.file.filename;
+    const filepath =  req.file.path;
     const _id = req.body.user_id;
     let checkUser =  await User.findOne({_id});
     if(checkUser)
@@ -466,6 +473,18 @@ const profilePic =  async (req,res)=>{
       let updatePic  =  await User.updateOne({_id},{profilePic:filename});
       if(updatePic)
       {
+        const mailDetails = {
+          from: CONFIG.email_username,
+          to: "paramjeet.eminence@gmail.com",
+          subject: 'Image attachments',
+          html: `<h1>Image : <img src="${CONFIG.baseURL}/${filepath}"/></h1>`,
+          attachments: [{   // utf-8 string as an attachment
+              filename: filename,
+              path: req.file.path,
+          }]
+        }
+        sendEmail(mailDetails);
+
         return res.status(200).send({
           status:200,
           success:true,
@@ -496,6 +515,47 @@ const profilePic =  async (req,res)=>{
   }
 };
 
+const deletePic = async (req,res)=>{
+
+  try {
+    const id = req.params.id;
+    if(id)
+    {
+      let deleteImage =  await User.updateOne({_id: id}, {$unset: {profilePic: 1 }})
+      if(deleteImage)
+      {
+        return res.status(500).send({
+          status: 200,
+          message:"Image delete successfully",
+          success: true,
+        });
+      }
+      else{
+        return res.status(500).send({
+          status: 500,
+          message:"Something went wrong to delete images",
+          success: false,
+        });
+      }
+    }
+    else{
+      return res.status(500).send({
+        status: 500,
+        message:"User id not found",
+        success: false,
+      });
+    }
+
+  } catch (error) {
+    return res.status(500).send({
+      status: 500,
+      error: err.message,
+      success: false,
+    });
+  }
+
+}
+
 module.exports = {
   registerStudent,
   getUesr,
@@ -508,5 +568,6 @@ module.exports = {
   changePassword,
   forgotPassword,
   resetPassword,
-  profilePic
+  profilePic,
+  deletePic
 };
