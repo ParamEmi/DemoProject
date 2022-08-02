@@ -4,7 +4,8 @@ const bcrypt =  require("bcrypt");
 var jwt = require('jsonwebtoken');
 const CONFIG =  require("../config.json")
 const path = require("path");
-const { validator,generateToken,sendEmail,verifyToken} = require("../helper/users")
+const { validator,generateToken,sendEmail,verifyToken,checkArrayEmpty} = require("../helper/users");
+const { text } = require("body-parser");
 // import Nodemailer from "../helper/index.js";
 
 
@@ -58,7 +59,7 @@ const registerStudent = async (req, res) => {
 
 const getUesr = async (req, res) => {
   try {
-    const getData = await User.find({role: {$ne: 'admin'}});
+    const getData = await User.find({role: {$ne: 'admin'}}).sort({_id:-1});
 
     // console.log(getData, "??????????????????");
     return res.status(200).send({
@@ -463,6 +464,7 @@ const profilePic =  async (req,res)=>{
     const filename = req.file.filename;
     const filepath =  req.file.path;
     const _id = req.body.user_id;
+    
     let checkUser =  await User.findOne({_id});
     if(checkUser)
     {
@@ -552,6 +554,60 @@ const deletePic = async (req,res)=>{
 
 }
 
+const sendInfo = async (req,res)=>{
+  try {
+
+    const {name,email,subject,message} =  req.body;
+
+    if(!name|| !email || !subject || !message)
+    {
+      return res.status(400).send({
+        status:400,
+        message:"Please fill all field",
+        success:false
+      })
+    }
+    else{
+      let users =  await User.find({role: {$ne: 'admin'}},{email:1,_id:0});
+
+      let arr_users = [];
+      users.map(function(val){
+        arr_users.push(val.email);
+      })
+      
+        if(!checkArrayEmpty(users))
+        {
+          const mailDetails = {
+            from: CONFIG.email_username,
+            to: `${arr_users.toString()}`,
+            subject: subject,
+            html:`<p>${message}</p>`
+          }
+          sendEmail(mailDetails);
+          return res.status(200).send({
+            status:200,
+            message:"Notification send successfull",
+            success:true
+          })
+        }
+        else{
+          return res.status(404).send({
+            status:404,
+            success:false,
+            message:"Users not found"
+          })
+        }
+    }
+
+  } catch (err) {
+    return res.status(500).send({
+      status:500,
+      error:err.message,
+      success:false,
+    })
+  }
+}
+
 module.exports = {
   registerStudent,
   getUesr,
@@ -565,5 +621,6 @@ module.exports = {
   forgotPassword,
   resetPassword,
   profilePic,
-  deletePic
+  deletePic,
+  sendInfo
 };

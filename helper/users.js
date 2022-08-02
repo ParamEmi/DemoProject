@@ -46,6 +46,15 @@ const validator = (req, res, next) => {
       return false
     }
   }
+
+  // check array of object is blank or not
+  const checkArrayEmpty = (obj)=>{
+    for(var prop in obj) {
+      if(obj.hasOwnProperty(prop))
+          return false;
+  }
+  return true;
+  }
    
 
   const authmiddleware = (req,res,next)=>{
@@ -94,5 +103,6 @@ const validator = (req, res, next) => {
     generateToken,
     authmiddleware,
     verifyToken,
-    sendEmail
+    sendEmail,
+    checkArrayEmpty
   };
