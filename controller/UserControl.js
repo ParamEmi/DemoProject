@@ -62,7 +62,7 @@ const getUesr = async (req, res) => {
     const getData = await User.find({role: {$ne: 'admin'}}).sort({_id:-1});
 
     // console.log(getData, "??????????????????");
-    return res.status(200).send({
+    return res.status(200).json({
       status: 200,
       message: "users details get succesfully",
       data: getData,
@@ -464,7 +464,6 @@ const profilePic =  async (req,res)=>{
     const filename = req.file.filename;
     const filepath =  req.file.path;
     const _id = req.body.user_id;
-    
     let checkUser =  await User.findOne({_id});
     if(checkUser)
     {

@@ -79,6 +79,8 @@ const validator = (req, res, next) => {
         res.status(400).json('Token not valid')
       }
   }
+
+
   
   const sendEmail =  (mailDetails)=>{
     let mailTransporter = nodemailer.createTransport({

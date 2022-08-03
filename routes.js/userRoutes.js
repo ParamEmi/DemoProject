@@ -20,6 +20,7 @@ const fileFilter = function (req, file, cb) {
   var ext = path.extname(file.originalname);
   if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
       return cb(new Error('Invalid file type. Only jpg, png image files are allowed.'),false)
+     
   }
   cb(null, true)
 }
@@ -27,7 +28,7 @@ const fileFilter = function (req, file, cb) {
 let fileObj = {
   storage: storage,
   limits: {
-      fileSize: 1024
+      fileSize: 1024*1024
 },
   fileFilter: fileFilter
 };
