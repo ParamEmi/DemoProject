@@ -11,7 +11,7 @@ const { text } = require("body-parser");
 
 const registerStudent = async (req, res) => {
   try {
-    const {name,email, password,address,phoneNo} = req.body;
+    const {name,email,address,phoneNo} = req.body;
 
     const user = await User.findOne({email});
 
@@ -23,11 +23,10 @@ const registerStudent = async (req, res) => {
         });
       }
 
-    let hashPassword  = await bcrypt.hash(password.toString(), 10);
+    //let hashPassword  = await bcrypt.hash(password.toString(), 10);
     
     const newUser = {
       ...req.body,
-      password:hashPassword
     };
   
     const result = await User.create(newUser);

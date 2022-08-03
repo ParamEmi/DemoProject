@@ -5,7 +5,7 @@ const UserSchema = new Schema(
   {
     name: {type:String, required:true},
     email: {type:String , unique : true ,required:true},
-    password: {type:String,required:true},
+    password: {type:String},
     address: {type:String , required:true},
     phoneNo:{type:String, required:true},
     role:{type:String , enun:["user","admin"], default:"user"},
